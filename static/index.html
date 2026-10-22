@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepFace AI — Login</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-body">
+
+    <!-- Animated background blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+                <h1>DeepFace <span>AI</span></h1>
+                <p class="brand-tagline">Advanced Facial Intelligence Platform</p>
+            </div>
+
+            <div class="login-tabs">
+                <button class="login-tab active" id="tab-signin">Sign In</button>
+                <button class="login-tab" id="tab-signup">Sign Up</button>
+            </div>
+
+            <!-- Sign In Form -->
+            <form class="auth-form active" id="form-signin">
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="signin-email" placeholder="Email address" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="signin-password" placeholder="Password" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('signin-password', this)">
+                        <i class="fa-solid fa-eye-slash"></i>
+                    </button>
+                </div>
+                <button type="submit" class="btn-auth">
+                    <span>Sign In</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form class="auth-form" id="form-signup">
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="signup-name" placeholder="Full name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="signup-email" placeholder="Email address" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="signup-password" placeholder="Create password" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('signup-password', this)">
+                        <i class="fa-solid fa-eye-slash"></i>
+                    </button>
+                </div>
+                <button type="submit" class="btn-auth">
+                    <span>Create Account</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>By continuing, you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a>.</p>
+            </div>
+        </div>
+
+        <div class="login-hero">
+            <div class="hero-content">
+                <h2>Detect. Analyze. Verify.</h2>
+                <p>Harness the power of deep learning to analyze faces, verify identities, and expose deepfakes — all running 100% locally on your machine.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Face Attribute Analysis</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Identity Verification</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Deepfake Detection</li>
+                    <li><i class="fa-solid fa-circle-check"></i> 100% Private & Local</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.getElementById('tab-signin').addEventListener('click', () => {
+            document.getElementById('tab-signin').classList.add('active');
+            document.getElementById('tab-signup').classList.remove('active');
+            document.getElementById('form-signin').classList.add('active');
+            document.getElementById('form-signup').classList.remove('active');
+        });
+        document.getElementById('tab-signup').addEventListener('click', () => {
+            document.getElementById('tab-signup').classList.add('active');
+            document.getElementById('tab-signin').classList.remove('active');
+            document.getElementById('form-signup').classList.add('active');
+            document.getElementById('form-signin').classList.remove('active');
+        });
+
+        // Password visibility toggle
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye-slash';
+            }
+        }
+
+        // shortcut: plaintext passwords in localStorage; safe for local-only demo, not for production deployment
+        // Form submissions — store user in localStorage and redirect
+        document.getElementById('form-signin').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('signin-email').value;
+            const users = JSON.parse(localStorage.getItem('df_users') || '{}');
+            const password = document.getElementById('signin-password').value;
+            if (users[email] && users[email].password === password) {
+                localStorage.setItem('df_session', JSON.stringify({ email, name: users[email].name }));
+                window.location.href = '/static/app.html';
+            } else {
+                alert('Invalid email or password. Please try again or sign up.');
+            }
+        });
+
+        document.getElementById('form-signup').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const users = JSON.parse(localStorage.getItem('df_users') || '{}');
+            users[email] = { name, password };
+            localStorage.setItem('df_users', JSON.stringify(users));
+            localStorage.setItem('df_session', JSON.stringify({ email, name }));
+            window.location.href = '/static/app.html';
+        });
+    </script>
+</body>
+</html>

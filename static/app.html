@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepFace AI — Dashboard</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="app-body">
+
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="fa-solid fa-eye"></i></div>
+            <span>DeepFace <strong>AI</strong></span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <button class="side-btn active" id="nav-analyze" data-tab="analyze">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Analyze Attributes</span>
+            </button>
+            <button class="side-btn" id="nav-verify" data-tab="verify">
+                <i class="fa-solid fa-user-check"></i>
+                <span>Verify Faces</span>
+            </button>
+            <button class="side-btn" id="nav-deepfake" data-tab="deepfake">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>Detect Deepfake</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-user">
+            <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="user-info">
+                <span id="user-name">User</span>
+                <span id="user-email">user@email.com</span>
+            </div>
+            <button class="logout-btn" onclick="logout()" title="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="topbar">
+            <div class="page-title" id="page-title">
+                <i class="fa-solid fa-chart-pie"></i>
+                <h2>Analyze Attributes</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>AI Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <section id="section-analyze" class="section active">
+            <div class="section-description">
+                <p>Upload a face photo to let the AI analyze <strong>gender</strong>, <strong>emotion</strong>, and <strong>ethnicity</strong>.</p>
+            </div>
+            <div class="upload-area" id="upload-analyze">
+                <input type="file" id="file-analyze" accept="image/*" hidden>
+                <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <h3>Drop your image here</h3>
+                <p>or click to browse files</p>
+                <span class="upload-hint">Supports JPG, PNG, WEBP</span>
+            </div>
+            <div class="preview-container" id="preview-analyze-container" style="display: none;">
+                <div class="preview-wrapper">
+                    <button class="btn-clear" id="clear-analyze" title="Remove Image"><i class="fa-solid fa-times"></i></button>
+                    <img id="preview-analyze" src="" alt="Preview">
+                </div>
+                <button class="btn-primary" id="btn-analyze">
+                    <i class="fa-solid fa-magnifying-glass"></i> Run Analysis
+                </button>
+            </div>
+            <div class="results-container" id="results-analyze" style="display: none;"></div>
+        </section>
+
+        <!-- Verification Section -->
+        <section id="section-verify" class="section">
+            <div class="section-description">
+                <p>Upload two face photos to check if they belong to the <strong>same person</strong>.</p>
+            </div>
+            <div class="dual-upload">
+                <div class="upload-box">
+                    <div class="upload-area small" id="upload-verify-1">
+                        <input type="file" id="file-verify-1" accept="image/*" hidden>
+                        <div class="upload-icon"><i class="fa-regular fa-image"></i></div>
+                        <p>Person A</p>
+                    </div>
+                    <button class="btn-clear" id="clear-verify-1" style="display:none;" title="Remove"><i class="fa-solid fa-times"></i></button>
+                    <img class="preview-img" id="preview-verify-1" src="" style="display: none;">
+                </div>
+                <div class="vs-badge">VS</div>
+                <div class="upload-box">
+                    <div class="upload-area small" id="upload-verify-2">
+                        <input type="file" id="file-verify-2" accept="image/*" hidden>
+                        <div class="upload-icon"><i class="fa-regular fa-image"></i></div>
+                        <p>Person B</p>
+                    </div>
+                    <button class="btn-clear" id="clear-verify-2" style="display:none;" title="Remove"><i class="fa-solid fa-times"></i></button>
+                    <img class="preview-img" id="preview-verify-2" src="" style="display: none;">
+                </div>
+            </div>
+            <div class="action-row">
+                <button class="btn-primary" id="btn-verify" style="display: none;">
+                    <i class="fa-solid fa-code-compare"></i> Compare Faces
+                </button>
+            </div>
+            <div class="results-container" id="results-verify" style="display: none;"></div>
+        </section>
+
+        <!-- Deepfake Section -->
+        <section id="section-deepfake" class="section">
+            <div class="section-description">
+                <p>Upload a face image to detect if it is a <strong>real photo</strong> or an <strong>AI-generated deepfake</strong>.</p>
+            </div>
+            <div class="upload-area" id="upload-deepfake">
+                <input type="file" id="file-deepfake" accept="image/*" hidden>
+                <div class="upload-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Drop your image here</h3>
+                <p>or click to browse files</p>
+                <span class="upload-hint">Supports JPG, PNG, WEBP</span>
+            </div>
+            <div class="preview-container" id="preview-deepfake-container" style="display: none;">
+                <div class="preview-wrapper">
+                    <button class="btn-clear" id="clear-deepfake" title="Remove Image"><i class="fa-solid fa-times"></i></button>
+                    <img id="preview-deepfake" src="" alt="Preview">
+                </div>
+                <button class="btn-primary" id="btn-deepfake">
+                    <i class="fa-solid fa-radar"></i> Scan for Deepfake
+                </button>
+            </div>
+            <div class="results-container" id="results-deepfake" style="display: none;"></div>
+        </section>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loader-box">
+            <div class="spinner"></div>
+            <p>AI is processing<span class="dots">...</span></p>
+        </div>
+    </div>
+
+    <script src="/static/app.js?v=3"></script>
+    <script>
+        // Auth guard
+        const session = JSON.parse(localStorage.getItem('df_session') || 'null');
+        if (!session) {
+            window.location.href = '/';
+        } else {
+            document.getElementById('user-name').textContent = session.name || 'User';
+            document.getElementById('user-email').textContent = session.email || '';
+        }
+
+        function logout() {
+            localStorage.removeItem('df_session');
+            window.location.href = '/';
+        }
+
+        // Sidebar navigation
+        const pageTitles = {
+            analyze: { icon: 'fa-chart-pie', text: 'Analyze Attributes' },
+            verify:  { icon: 'fa-user-check', text: 'Verify Faces' },
+            deepfake: { icon: 'fa-user-shield', text: 'Detect Deepfake' }
+        };
+        document.querySelectorAll('.side-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('section-' + tab).classList.add('active');
+                const t = pageTitles[tab];
+                document.getElementById('page-title').innerHTML = `<i class="fa-solid ${t.icon}"></i><h2>${t.text}</h2>`;
+            });
+        });
+
+        // Animated dots
+        let dotCount = 0;
+        setInterval(() => {
+            const dots = document.querySelector('.dots');
+            if (dots) {
+                dotCount = (dotCount + 1) % 4;
+                dots.textContent = '.'.repeat(dotCount);
+            }
+        }, 500);
+    </script>
+</body>
+</html>
